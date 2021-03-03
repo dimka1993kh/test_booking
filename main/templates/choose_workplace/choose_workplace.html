@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Выбор рабочего места{% endblock %}
+
+{% block content %}
+    {% for workplace in workplaces %}
+        <div>
+            <a href={% url 'booking_date_workplace' workplace.cabinet.number workplace.number_wp %}>{{workplace.number_wp}}</a>
+        </div>
+    {% endfor %}
+{% endblock %}

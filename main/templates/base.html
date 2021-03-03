@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title%}{% endblock %}</title>
+</head>
+<body>
+{% if user.is_authenticated %}
+    {{ user.username}}
+    <a href={% url 'logout' %}>Выйти</a>
+{% else %}
+    <a href={% url 'login' %}>Войти</a>
+    <a href={% url 'signup' %}>Регистрация</a>
+{% endif %}
+    <a href={% url 'main' %}>На главную</a>
+    {% comment %} <a href={'./'}>Назад</a> {% endcomment %}
+    {% block content%}
+        
+    {% endblock %}
+</body>
+</html>

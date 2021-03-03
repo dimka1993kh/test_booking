@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Выбор времени бронирования{% endblock %}
+
+{% block content %}
+    <h1>Выбор времени бронирования</h1>
+    {{date}}
+    <p>Кабинет {{cabinet}}, рабочее место {{workplace}}</p>  
+        <form method='post'>
+            {% csrf_token %}
+            {{ form.as_p }} <br>
+            <span>{{error}}</span>
+            <button class='btn btn-success' type="submit">Забронировать рабочее место на данное время</button> 
+        </form>
+{% endblock %}

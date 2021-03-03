@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Выбор даты бронирования{% endblock %}
+
+{% block content %}
+    <h1>Выбор даты бронирования</h1>  
+        <form method='post'>
+            {% csrf_token %}
+            {{ form }} <br>
+            <span>{{error}}</span>
+            <button class='btn btn-success' type="submit">Забронировать рабочее место на данную дату</button> 
+        </form>
+{% endblock %}
+
