@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Cabinet, Workplace, BookingDate, BookingWorkplace
 from .forms import BookingDateForm, BookingTimeForm
-from .functions import find_free_time
+from .functions import find_free_time, analize_time_interval
 
 # Create your views here.
 def choose_workplace(request, pk):
@@ -49,14 +49,16 @@ def booking_workplace(request, pk, wkplc, date):
     # end_choices = free_time['end']
     not_free_workplace_on_this_day = BookingWorkplace.objects.filter(booking_date=date).filter(cabinet=pk).filter(workplace=wkplc)
     default_choices = None
-    for iter_obj in not_free_workplace_on_this_day:
-        # print('default_choices', default_choices)
-        if iter_obj:
+    if not_free_workplace_on_this_day:
+        for iter_obj in not_free_workplace_on_this_day:
             arg = [iter_obj.start_time, iter_obj.end_time]
-        else: 
-            arg = None
+            free_time = find_free_time(arg, default_choices)
+            default_choices = free_time['default']
+    else: 
+        arg = None
         free_time = find_free_time(arg, default_choices)
         default_choices = free_time['default']
+    
 
     start_choices = free_time['start']
     end_choices = free_time['end']
@@ -70,8 +72,11 @@ def booking_workplace(request, pk, wkplc, date):
                 response.workplace = wkplc
                 response.booking_date = date
                 response.user = request.user.username
-                response.save()
-                return redirect('main')
+                print('error', error)
+                error = analize_time_interval(default_choices, response.start_time, response.end_time)
+                if error == '':
+                    response.save()
+                    return redirect('main')
         else:
             error = 'Форма была не верной'
         # print('request.user.username', request.user.username)
