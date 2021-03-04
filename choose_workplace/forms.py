@@ -54,3 +54,4 @@ class BookingTimeForm(ModelForm):
                     'class' : 'form-control',                  
                 }),                                                    
         }
+

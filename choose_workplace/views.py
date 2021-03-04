@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Cabinet, Workplace, BookingDate, BookingWorkplace
 from .forms import BookingDateForm, BookingTimeForm
 from .functions import find_free_time, analize_time_interval
+from django.contrib.auth.models import User
 
 # Create your views here.
 def choose_workplace(request, pk):
@@ -65,35 +66,42 @@ def booking_workplace(request, pk, wkplc, date):
     if len(start_choices) == 0 and len(end_choices) == 0:
         error = 'Данное место в кабинете занято на весь день. Выберете другое место'
     if request.method == 'POST':
-        form = BookingTimeForm(request.POST, start_choices=start_choices, end_choices=end_choices, cabinet=pk, workplace=wkplc, booking_date=date, user=request.user.username)
+        form = BookingTimeForm(request.POST, start_choices=start_choices, end_choices=end_choices, cabinet=pk, workplace=wkplc, booking_date=date, user=request.user)
         if form.is_valid():
-                response = form.save(commit=False)
-                response.cabinet = pk
-                response.workplace = wkplc
-                response.booking_date = date
-                response.user = request.user.username
-                print('error', error)
-                error = analize_time_interval(default_choices, response.start_time, response.end_time)
-                if error == '':
-                    response.save()
-                    return redirect('main')
+            response = form.save(commit=False)
+            response.cabinet = pk
+            response.workplace = wkplc
+            response.booking_date = date
+            response.user = request.user.username
+            error = analize_time_interval(default_choices, response.start_time, response.end_time)
+            if error == '':
+                response.save()
+                return redirect('main')
         else:
             error = 'Форма была не верной'
         # print('request.user.username', request.user.username)
-    form = BookingTimeForm(start_choices=start_choices, end_choices=end_choices, cabinet=pk, workplace=wkplc, booking_date=date, user=request.user.username) 
+    form = BookingTimeForm(start_choices=start_choices, end_choices=end_choices, cabinet=pk, workplace=wkplc, booking_date=date, user=request.user) 
 
     data = {
         'date' : date, 
         'form' : form,
         'cabinet' : pk,
         'workplace' : wkplc,
-        'error' : error
+        'user': request.user,
+        'error' : error,
         }
     return render(request, 'choose_workplace/booking_workplace.html', data)
 
-def all_booking(request):
+def all_booking(request, username=None, cabinet=None):
+    if username:
+        table = BookingWorkplace.objects.filter(user=username)
+    elif cabinet:
+        table = BookingWorkplace.objects.filter(cabinet=cabinet)
+    else:
+        table = BookingWorkplace.objects.all()
     data = {
-        'table' : BookingWorkplace.objects.all()
+        'table' : table,
+        'cabinets': Cabinet.objects.all(),
+        'users' : User.objects.all()
     }
-    print(data)
     return render(request, 'choose_workplace/all_booking.html', data)

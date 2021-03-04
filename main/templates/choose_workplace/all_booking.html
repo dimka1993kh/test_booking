@@ -5,6 +5,14 @@
 {% block content %}
     {% if user.is_authenticated %}
         {% if table %}
+            <p>Сортировать по пользователю</p>
+            {% for el in users %}
+                <a href={% url 'all_booking' el.username %}>{{el}}</a><br>
+            {% endfor %}
+            <p>Сортировать по номеру кабинета</p>
+            {% for el in cabinets %}
+                <a href={% url 'all_booking' el.number %}>{{el}}</a><br>
+            {% endfor %}
             <table>
                 <tr>
                     <th>Пользователь</th>

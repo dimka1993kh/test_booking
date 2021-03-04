@@ -49,5 +49,6 @@ class BookingWorkplace(models.Model):
     class Meta:
             verbose_name = 'Время бронирования'
             verbose_name_plural = 'Время бронирования'
+
     
 
