@@ -36,23 +36,15 @@ class BookingDate(models.Model):
 
 class BookingWorkplace(models.Model):
 
-    # user = models.CharField('Пользователь', max_length=250, default='')
-
-
-    # cabinet = models.OneToOneField(Cabinet, on_delete=models.PROTECT, to_field='number')
-    # workplace = models.OneToOneField(Workplace, on_delete=models.PROTECT, to_field='number_wp')
-    # booking_date = models.OneToOneField(BookingDate, on_delete=models.PROTECT, to_field='booking_date')
-    
-    
-    # cabinet = models.IntegerField('Номер кабинета', default=0)
-    # workplace = models.IntegerField('Номер рабочего места', default=0)
-    # booking_date = models.DateField('Дата бронирования', default=datetime.date.today())
-
+    user = models.CharField('Пользователь', max_length=250, default='')
+    cabinet = models.IntegerField('Номер кабинета', default=0)
+    workplace = models.IntegerField('Номер рабочего места', default=0)
+    booking_date = models.DateField('Дата бронирования', default=datetime.date.today())
     start_time = models.IntegerField('Начало работы', choices=default_choices)
     end_time = models.IntegerField('Окончание работы', choices=default_choices)
 
     def __str__(self):
-        return f'Начало работы {self.start_time}, окончание работы {self.end_time}'
+        return f'Дата: {self.booking_date}, пользователь {self.user}, кабинет:{self.cabinet}, начало работы {self.start_time}, окончание работы {self.end_time}'
 
     class Meta:
             verbose_name = 'Время бронирования'

@@ -15,14 +15,23 @@ class BookingDateForm(ModelForm):
 
 class BookingTimeForm(ModelForm):
 
-    def __init__(self, *args, **kwargs): #, data=None, start_choices=((8,8),), end_choices=((8,8),), cabinet=None, workplace=None, booking_date=None, user=None ,
-        print('kwargs', kwargs)
+    def __init__(self, *args, **kwargs): 
+        # print('kwargs', kwargs)
         start_choices = kwargs.pop('start_choices')
         end_choices = kwargs.pop('end_choices')
+        cabinet = kwargs.pop('cabinet')
+        workplace = kwargs.pop('workplace')
+        booking_date = kwargs.pop('booking_date')
+        user = kwargs.pop('user')
+
         super(BookingTimeForm, self).__init__(*args, **kwargs)
 
         self.fields['start_time'].choices = start_choices
         self.fields['end_time'].choices = end_choices
+        # self.fields['cabinet'].queryset = cabinet
+        # self.fields['workplace'].queryset = workplace
+        # self.fields['booking_date'].queryset = booking_date
+        # self.fields['user'].queryset = user
         
         # if cabinet is not None:
         #     self.fields['cabinet'].initial = cabinet

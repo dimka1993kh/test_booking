@@ -39,20 +39,43 @@ def booking_date_workplace(request, pk, wkplc):
 
 def booking_workplace(request, pk, wkplc, date): 
     error = ''
-    free_time = find_free_time()
+    # not_free_workplace_on_this_day = BookingWorkplace.objects.filter(booking_date=date).filter(cabinet=pk).filter(workplace=wkplc).last()
+    # if not_free_workplace_on_this_day:
+    #     arg = [not_free_workplace_on_this_day.start_time, not_free_workplace_on_this_day.end_time]
+    # else: 
+    #     arg = None
+    # free_time = find_free_time(arg)
+    # start_choices = free_time['start']
+    # end_choices = free_time['end']
+    not_free_workplace_on_this_day = BookingWorkplace.objects.filter(booking_date=date).filter(cabinet=pk).filter(workplace=wkplc)
+    default_choices = None
+    for iter_obj in not_free_workplace_on_this_day:
+        # print('default_choices', default_choices)
+        if iter_obj:
+            arg = [iter_obj.start_time, iter_obj.end_time]
+        else: 
+            arg = None
+        free_time = find_free_time(arg, default_choices)
+        default_choices = free_time['default']
+
     start_choices = free_time['start']
     end_choices = free_time['end']
-
+    if len(start_choices) == 0 and len(end_choices) == 0:
+        error = 'Данное место в кабинете занято на весь день. Выберете другое место'
     if request.method == 'POST':
-        form = BookingTimeForm(request.POST, start_choices=start_choices, end_choices=end_choices)
-        print('form_errors', form.errors)
+        form = BookingTimeForm(request.POST, start_choices=start_choices, end_choices=end_choices, cabinet=pk, workplace=wkplc, booking_date=date, user=request.user.username)
         if form.is_valid():
-            response = form.save()
-            return redirect('main')
+                response = form.save(commit=False)
+                response.cabinet = pk
+                response.workplace = wkplc
+                response.booking_date = date
+                response.user = request.user.username
+                response.save()
+                return redirect('main')
         else:
             error = 'Форма была не верной'
         # print('request.user.username', request.user.username)
-    form = BookingTimeForm(start_choices=start_choices, end_choices=end_choices) #, cabinet=pk, workplace=wkplc, booking_date=date, user=request.user.username
+    form = BookingTimeForm(start_choices=start_choices, end_choices=end_choices, cabinet=pk, workplace=wkplc, booking_date=date, user=request.user.username) 
 
     data = {
         'date' : date, 

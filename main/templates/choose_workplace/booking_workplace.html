@@ -4,12 +4,15 @@
 
 {% block content %}
     <h1>Выбор времени бронирования</h1>
-    {{date}}
-    <p>Кабинет {{cabinet}}, рабочее место {{workplace}}</p>  
+    {% comment %} {{date}}   {% endcomment %}
+    <p>Кабинет {{cabinet}}, рабочее место {{workplace}}</p>
+    {% if not error %}
         <form method='post'>
             {% csrf_token %}
             {{ form.as_p }} <br>
-            <span>{{error}}</span>
             <button class='btn btn-success' type="submit">Забронировать рабочее место на данное время</button> 
         </form>
+    {% else %}
+        <span>{{error}}</span>
+    {% endif %}
 {% endblock %}
