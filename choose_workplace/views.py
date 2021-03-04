@@ -90,3 +90,10 @@ def booking_workplace(request, pk, wkplc, date):
         'error' : error
         }
     return render(request, 'choose_workplace/booking_workplace.html', data)
+
+def all_booking(request):
+    data = {
+        'table' : BookingWorkplace.objects.all()
+    }
+    print(data)
+    return render(request, 'choose_workplace/all_booking.html', data)
