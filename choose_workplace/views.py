@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Cabinet, Workplace, BookingDate, BookingWorkplace
-from .forms import BookingDateForm, BookingTimeForm
-from .functions import find_free_time, analize_time_interval
+from .forms import BookingDateForm, BookingTimeForm, FreeWorkplaceForm
+from .functions import find_free_time, analize_time_interval, find_free_workplaces
 from django.contrib.auth.models import User
 
 # Create your views here.
@@ -105,3 +105,41 @@ def all_booking(request, username=None, cabinet=None):
         'users' : User.objects.all()
     }
     return render(request, 'choose_workplace/all_booking.html', data)
+
+def find_free_workplace(request, booking_date=None, start_time=None, end_time=None):
+    args = [booking_date != None, start_time != None, end_time != None]
+    # print(request.method)
+    if request.method=='POST':
+        booking_date = ''
+        start_time = ''
+        end_time = ''
+        form = FreeWorkplaceForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            print('data', data)
+            booking_date = data.get('booking_date')
+            start_time = data.get('start_time')
+            end_time = data.get('end_time')
+            return redirect('find_free_workplace', booking_date, start_time, end_time)
+    print(booking_date)
+    form = FreeWorkplaceForm() 
+    # print(args) 
+    if all(args):
+        table = []
+        print('(BookingWorkplace.objects.filter(booking_date=booking_date)', BookingWorkplace.objects.filter(booking_date=booking_date))
+        # free_workplaces = find_free_workplaces(BookingWorkplace.objects.filter(booking_date=booking_date), start_time, end_time)
+        # print('free_workplaces', free_workplaces)
+        # table = Workplace.objects.exclude(cabinet__in=free_workplaces[0], number_wp__in=free_workplaces[1])
+        table = find_free_workplaces(Workplace.objects.all(), BookingWorkplace.objects.filter(booking_date=booking_date), start_time, end_time)
+#.exclude(number_wp__in=free_workplaces[1])s
+        print('table', table)
+    else:
+        table = Workplace.objects.all()
+    data = {
+        'form' : form,
+        'booking_date' : booking_date, 
+        'start_time' : start_time, 
+        'end_time' : end_time,
+        'table' : table
+    }
+    return render(request, 'choose_workplace/find_free_workplace.html', data)

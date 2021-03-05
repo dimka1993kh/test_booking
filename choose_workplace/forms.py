@@ -1,5 +1,6 @@
 from .models import BookingDate, BookingWorkplace
-from django.forms import ModelForm, DateInput, Select
+from django.forms import ModelForm, DateInput, Select, DateField, IntegerField, Form, ChoiceField
+from .data import default_choices
 
 class BookingDateForm(ModelForm):
     class Meta:
@@ -55,3 +56,17 @@ class BookingTimeForm(ModelForm):
                 }),                                                    
         }
 
+class FreeWorkplaceForm(Form):
+    booking_date = DateField()
+    start_time = ChoiceField(choices=default_choices)
+    end_time = ChoiceField(choices=default_choices)
+    class Meta:
+        fields = ['start_time', 'end_time']
+        widgets = {
+            'start_time' : Select(attrs={
+            'class' : 'form-control',               
+            }), 
+            'end_time' : Select(attrs={
+            'class' : 'form-control',                  
+            }),  
+        }

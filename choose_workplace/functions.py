@@ -42,8 +42,6 @@ def find_free_time(choices:list=None, default_choices:list=None):
                     'end' : end_choices,
                     'default' : choices
                     }
-        # result = part_one + part_two
-        print(result)
     return result
 
 def analize_time_interval(default_choices:list, start_time_booking:int, end_time_booking:int):
@@ -56,27 +54,26 @@ def analize_time_interval(default_choices:list, start_time_booking:int, end_time
         set_default_choices = set(set_default_choices)
         set_time_interval = set(list(range(start_time_booking, end_time_booking)))
 
-        print('set_default_choices',set_default_choices)
-        print('set_time_interval',set_time_interval)
-
         result = set_time_interval - set_default_choices
         if len(result) != 0:
             available_time_intervals = []
             last_el = list(set_default_choices)[0]
             for el in list(result):
                 available_time_intervals.append(f'{last_el} - {el - 1}')
-                print('result', result)
-                print('set_default_choices', set_default_choices)
-                # print('set_start_choices.index(el)', list(set_start_choices).index(el))
-                
                 list_default_choices = list(set_default_choices)
-                # if list_start_choices.index(el) != len(list_start_choices) - 1:
                 last_el = list_default_choices[list_default_choices.index(el + 1)]
                 if el == list(result)[-1]:
                     available_time_intervals.append(f'{last_el} - {list(set_default_choices)[-1]}')
             error = f'Выбрано недопустимое время. Доступные интервалы времени {available_time_intervals}'
-        print(result)
         return error
 
-# uuu = analize_time_interval([(8, 8),(9, 9),(10, 10),(12, 12),(13, 13),(14, 14),(16, 16),(17, 17),(18, 18),(19, 19),(20, 20),], 8, 21)
-# print(uuu)
+
+def find_free_workplaces(table, additional_table, start, end):
+    result = table
+    for el in additional_table:
+        set_one = set(range(int(start), int(end) + 1))
+        set_two = set(range(el.start_time, el.end_time + 1))
+        if set_one & set_two:
+            result = result.exclude(cabinet=el.cabinet, number_wp=el.workplace)
+            # print(result)
+    return result

@@ -3,8 +3,5 @@
 {% block title %}Главная{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-    <a href={% url 'cabinet_selection' %}>Выбрать Кабинет</a>
-    <a href={% url 'all_booking' %}>Просмотреть все бронирования</a>
-{% endif %}
+
 {% endblock %}

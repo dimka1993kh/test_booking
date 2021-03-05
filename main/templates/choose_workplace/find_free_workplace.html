@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Найти свободное рабочее место{% endblock %}
+
+{% block content %}
+    <p>Введите дату и время для поиска:</p>
+    <form method='post'>
+        {% csrf_token %}
+        {{ form.as_p }} <br>
+        <button class='btn btn-success' type="submit">Найти свободное рабочее место на данное время</button> 
+    </form>
+    <table>
+        <tr>
+            {% comment %} <th>Дата</th> {% endcomment %}
+            <th>Кабинет</th>
+            <th>Рабочее место</th>
+            {% comment %} <th>Начало рабочего времени</th> {% endcomment %}
+            {% comment %} <th>Окончание рабочего времени</th> {% endcomment %}
+        </tr>
+        {% comment %} {{table}} {% endcomment %}
+    {% for el in table %}
+    {{el.cabinet}}
+        <tr>
+            {% comment %} <td>{{el.booking_date}}</td> {% endcomment %}
+            <td>{{el.cabinet}}</td>
+            <td>{{el.number_wp}}</td>
+            {% comment %} <td>{{el.start_time}}</td> {% endcomment %}
+            {% comment %} <td>{{el.end_time}}</td> {% endcomment %}
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

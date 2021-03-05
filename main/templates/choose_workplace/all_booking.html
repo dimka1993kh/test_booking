@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
 
-{% block title %}Главная{% endblock %}
+{% block title %}Бронирования{% endblock %}
 
 {% block content %}
     {% if user.is_authenticated %}
+        <p>Сортировать по пользователю</p>
+        {% for el in users %}
+            <a href={% url 'all_booking' el.username %}>{{el}}</a><br>
+        {% endfor %}
+        <p>Сортировать по номеру кабинета</p>
+        {% for el in cabinets %}
+            <a href={% url 'all_booking' el.number %}>{{el}}</a><br>
+        {% endfor %}
+            <a href={% url 'all_booking'%}>Без сортировки</a><br>
         {% if table %}
-            <p>Сортировать по пользователю</p>
-            {% for el in users %}
-                <a href={% url 'all_booking' el.username %}>{{el}}</a><br>
-            {% endfor %}
-            <p>Сортировать по номеру кабинета</p>
-            {% for el in cabinets %}
-                <a href={% url 'all_booking' el.number %}>{{el}}</a><br>
-            {% endfor %}
             <table>
                 <tr>
                     <th>Пользователь</th>
@@ -38,4 +39,3 @@
         {% endif %}
     {% endif %}
 {% endblock %}
-

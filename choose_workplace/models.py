@@ -52,3 +52,5 @@ class BookingWorkplace(models.Model):
 
     
 
+# from .models import BookingWorkplace
+
