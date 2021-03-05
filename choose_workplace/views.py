@@ -23,8 +23,9 @@ def booking_date_workplace(request, pk, wkplc):
         form = BookingDateForm(request.POST)
         if form.is_valid():
             form.save()
+            # print(form.data)
             data = {
-                'date' : form.data['booking_date']
+                'date' : f"{form.data['booking_date_year']}-{form.data['booking_date_month']}-{form.data['booking_date_day']}"
             }
             return redirect('booking_workplace', pk, wkplc, data['date'])
         else:
@@ -76,7 +77,7 @@ def booking_workplace(request, pk, wkplc, date):
             error = analize_time_interval(default_choices, response.start_time, response.end_time)
             if error == '':
                 response.save()
-                return redirect('main')
+                return redirect('successful_booking', pk, wkplc, response.user, date, response.start_time, response.end_time)
         else:
             error = 'Форма была не верной'
         # print('request.user.username', request.user.username)
@@ -143,3 +144,17 @@ def find_free_workplace(request, booking_date=None, start_time=None, end_time=No
         'table' : table
     }
     return render(request, 'choose_workplace/find_free_workplace.html', data)
+
+def successful_booking(request, pk, wkplc, username, start_time, end_time, date):
+    data = {
+        'cabinet' : pk,
+        'workplace' : wkplc,
+        'username' : username,
+        'start_time' : start_time,
+        'end_time' : end_time, 
+        'date' : date
+    }
+    return render(request, 'choose_workplace/successful_booking.html', data)
+
+
+

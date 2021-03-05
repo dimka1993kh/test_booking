@@ -1,18 +1,22 @@
 from .models import BookingDate, BookingWorkplace
-from django.forms import ModelForm, DateInput, Select, DateField, IntegerField, Form, ChoiceField
+from django.forms import ModelForm, DateInput, Select, DateField, IntegerField, Form, ChoiceField, SelectDateWidget
 from .data import default_choices
+from django.contrib.admin.widgets import AdminDateWidget
+from django.forms.widgets import NumberInput
 
 class BookingDateForm(ModelForm):
+    # booking_date = DateField(widget=AdminDateWidget)
     class Meta:
         model = BookingDate
-        fields = ['booking_date']
+        fields = ['booking_date'] 
 
         widgets = {
-                'booking_date' : DateInput(attrs={
-                    'class' : 'form-control',
-                    'placeholder' : 'Дата бронирования'                    
-                }),                                                    
-        }
+            'booking_date' : SelectDateWidget()
+            }  
+        # widgets = {
+        #     'booking_date' : NumberInput(attrs={'type': 'date'})
+        #     }                                                   
+        
 
 class BookingTimeForm(ModelForm):
 
@@ -57,16 +61,21 @@ class BookingTimeForm(ModelForm):
         }
 
 class FreeWorkplaceForm(Form):
-    booking_date = DateField()
-    start_time = ChoiceField(choices=default_choices)
-    end_time = ChoiceField(choices=default_choices)
+    booking_date = DateField(label='Дата', widget=SelectDateWidget())
+    start_time = ChoiceField(label='Начало работы', choices=default_choices)
+    end_time = ChoiceField(label='Конец работы', choices=default_choices)
     class Meta:
-        fields = ['start_time', 'end_time']
+        fields = ['booking_date', 'start_time', 'end_time']
         widgets = {
             'start_time' : Select(attrs={
-            'class' : 'form-control',               
+            'class' : 'form-control', 
+            'verbose_name' : 'Начало'              
             }), 
             'end_time' : Select(attrs={
             'class' : 'form-control',                  
             }),  
+            # 'booking_date' : SelectDateWidget()
         }
+
+
+

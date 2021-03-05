@@ -1,8 +1,19 @@
 {% extends 'base.html' %}
 
+{% load static  %}
+
 {% block title %}Выбор даты бронирования{% endblock %}
 
 {% block content %}
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
+
+{{ form.media }}
+
+{% comment %} <link rel="stylesheet" type="text/css" href="{% static 'admin/css/base.css' %}" /> {% endcomment %}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}" />
     <h1>Выбор даты бронирования</h1>  
         <form method='post'>
             {% csrf_token %}

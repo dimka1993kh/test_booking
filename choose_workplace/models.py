@@ -43,6 +43,14 @@ class BookingWorkplace(models.Model):
     start_time = models.IntegerField('Начало работы', choices=default_choices)
     end_time = models.IntegerField('Окончание работы', choices=default_choices)
 
+# field1 = forms.DateField(
+#     widget=SelectDateWidget(
+#         empty_label=("Choose Year", "Choose Month", "Choose Day"),
+#     ),
+# )
+
+
+
     def __str__(self):
         return f'Дата: {self.booking_date}, пользователь {self.user}, кабинет:{self.cabinet}, начало работы {self.start_time}, окончание работы {self.end_time}'
 
