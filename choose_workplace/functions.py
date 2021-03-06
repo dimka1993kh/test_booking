@@ -44,10 +44,9 @@ def find_free_time(choices:list=None, default_choices:list=None):
                     }
     return result
 
-def analize_time_interval(default_choices:list, start_time_booking:int, end_time_booking:int):
+def analize_time_interval(default_choices:list, start_time_booking:int, end_time_booking:int, objects_booking_workplaces):
     error = ''
     if default_choices:
-        print('default_choices', default_choices)
         set_default_choices = []
         for el in default_choices:
             set_default_choices.append(el[0])
@@ -55,17 +54,27 @@ def analize_time_interval(default_choices:list, start_time_booking:int, end_time
         set_time_interval = set(list(range(start_time_booking, end_time_booking)))
 
         result = set_time_interval - set_default_choices
-        if len(result) != 0:
+        list_default_choices = list(set_default_choices)
+        if result:
             available_time_intervals = []
-            last_el = list(set_default_choices)[0]
-            for el in list(result):
-                available_time_intervals.append(f'{last_el} - {el - 1}')
-                list_default_choices = list(set_default_choices)
-                last_el = list_default_choices[list_default_choices.index(el + 1)]
-                if el == list(result)[-1]:
-                    available_time_intervals.append(f'{last_el} - {list(set_default_choices)[-1]}')
+            new_start = ''
+            for idx, el in enumerate(objects_booking_workplaces):
+                if idx == 0:
+                    start_el = list_default_choices[0]
+                    end_el = el.start_time
+                    new_start = el.end_time
+                    available_time_intervals.append(f'{start_el} - {end_el}')
+                elif el == objects_booking_workplaces.last():
+                    end_el = el.start_time
+                    available_time_intervals.append(f'{new_start} - {end_el}')
+                    new_start = el.end_time
+                    available_time_intervals.append(f'{new_start} - {list_default_choices[-1]}')
+                else:
+                    end_el = el.start_time
+                    available_time_intervals.append(f'{new_start} - {end_el}')
+                    new_start = el.end_time
             error = f'Выбрано недопустимое время. Доступные интервалы времени {available_time_intervals}'
-        return error
+    return error
 
 
 def find_free_workplaces(table, additional_table, start, end):
@@ -75,5 +84,4 @@ def find_free_workplaces(table, additional_table, start, end):
         set_two = set(range(el.start_time, el.end_time + 1))
         if set_one & set_two:
             result = result.exclude(cabinet=el.cabinet, number_wp=el.workplace)
-            # print(result)
     return result
