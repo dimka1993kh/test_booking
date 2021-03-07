@@ -117,7 +117,6 @@ def find_free_workplace(request, booking_date=None, start_time=None, end_time=No
             return redirect('find_free_workplace', booking_date, start_time, end_time)
     form = FreeWorkplaceForm() 
     if all(args):
-        # error = analize_time_interval(default_choices, now_choices, response.start_time, response.end_time, BookingWorkplace.objects.filter(booking_date=date))
         table = find_free_workplaces(Workplace.objects.all(), BookingWorkplace.objects.filter(booking_date=booking_date), start_time, end_time)
     else:
         table = Workplace.objects.all()

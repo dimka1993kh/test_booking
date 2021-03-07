@@ -45,7 +45,8 @@ def find_free_time(choices:list=None, default_choices:list=None):
 
 def analize_time_interval(default_choices:list, now_choices:list, start_time_booking:int, end_time_booking:int, objects_booking_workplaces):
     error = ''
-    if start_time_booking <= end_time_booking:
+    print(start_time_booking, end_time_booking)
+    if int(start_time_booking) > int(end_time_booking):
         error = 'Время начала работы должно быть меньше времени окончания работы'
     if now_choices and objects_booking_workplaces:
         list_now_choices = []
