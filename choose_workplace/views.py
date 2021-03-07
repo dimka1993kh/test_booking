@@ -71,7 +71,7 @@ def booking_workplace(request, pk, wkplc, date, start_time=None, end_time=None):
                 response.workplace = wkplc
                 response.booking_date = date
                 response.user = request.user.username
-                error = analize_time_interval(default_choices, now_choices, response.start_time, response.end_time, BookingWorkplace.objects.filter(booking_date=date).filter(cabinet=pk))
+                error = analize_time_interval(default_choices, now_choices, response.start_time, response.end_time, BookingWorkplace.objects.filter(booking_date=date).filter(cabinet=pk).filter(workplace=wkplc))
                 if error == '':
                     response.save()
                     return redirect('successful_booking', pk, wkplc, response.user, date, response.start_time, response.end_time)
