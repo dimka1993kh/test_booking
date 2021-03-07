@@ -45,7 +45,6 @@ def find_free_time(choices:list=None, default_choices:list=None):
 
 def analize_time_interval(default_choices:list, now_choices:list, start_time_booking:int, end_time_booking:int, objects_booking_workplaces):
     error = ''
-    print(start_time_booking, end_time_booking)
     if int(start_time_booking) > int(end_time_booking):
         error = 'Время начала работы должно быть меньше времени окончания работы'
     if now_choices and objects_booking_workplaces:
@@ -56,7 +55,7 @@ def analize_time_interval(default_choices:list, now_choices:list, start_time_boo
         for el in default_choices:
             list_default_choices.append(el[0])
         set_now_choices = set(list_now_choices)
-        set_time_interval = set(list(range(start_time_booking, end_time_booking)))
+        set_time_interval = set(list(range(start_time_booking, end_time_booking + 1)))
         result = True
         let = []
         st = objects_booking_workplaces.last().start_time
@@ -66,30 +65,28 @@ def analize_time_interval(default_choices:list, now_choices:list, start_time_boo
         print('set1', set1)
         print('set_time_interval', set_time_interval)
         dif = set1 & set_time_interval
+        print('dif', dif)
         if len(dif) == 1 or len(dif) == 0:
             result = False
         else:
             result = True
         print(result)
         if result:
+            min_time = 8
+            max_time = 20
+            not_free_list = []
             available_time_intervals = []
-            new_start = ''
-            for idx, el in enumerate(objects_booking_workplaces):
+            for el in objects_booking_workplaces:
+                not_free_list.append([el.start_time, el.end_time])
+            not_free_list.sort()
+            for idx, el in enumerate(not_free_list):
                 if idx == 0:
-                    start_el = list_default_choices[0]
-                    end_el = el.start_time
-                    new_start = el.end_time
-                    if start_el != end_el:
-                        available_time_intervals.append(f'{start_el} - {end_el}')
-                elif el == objects_booking_workplaces.last():
-                    end_el = el.start_time
-                    available_time_intervals.append(f'{new_start} - {end_el}')
-                    new_start = el.end_time
-                    available_time_intervals.append(f'{new_start} - {list_default_choices[-1]}')
+                    available_time_intervals.append(f'{min_time} - {el[0]}')
+                elif idx == len(not_free_list) - 1:
+                    available_time_intervals.append(f'{not_free_list[idx - 1][-1]} - {el[0]}')
+                    available_time_intervals.append(f'{el[1]} - {max_time}')
                 else:
-                    end_el = el.start_time
-                    available_time_intervals.append(f'{new_start} - {end_el}')
-                    new_start = el.end_time
+                    available_time_intervals.append(f'{not_free_list[idx - 1][-1]} - {el[0]}')
             error = f'Выбрано недопустимое время. Доступные интервалы времени {available_time_intervals}'
     return error
 
