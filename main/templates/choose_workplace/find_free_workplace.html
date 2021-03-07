@@ -10,32 +10,34 @@
 
 {{ form.media }}
 
-{% comment %} <link rel="stylesheet" type="text/css" href="{% static 'admin/css/base.css' %}" /> {% endcomment %}
 <link rel="stylesheet" type="text/css" href="{% static 'admin/css/widgets.css' %}" />
-    <p>Введите дату и время для поиска:</p>
-    <form method='post'>
-        {% csrf_token %}
-        {{ form.as_p }} <br>
-        <button class='btn btn-success' type="submit">Найти свободное рабочее место на данное время</button> 
-    </form>
-    <table>
-        <tr>
-            {% comment %} <th>Дата</th> {% endcomment %}
-            <th>Кабинет</th>
-            <th>Рабочее место</th>
-            {% comment %} <th>Начало рабочего времени</th> {% endcomment %}
-            {% comment %} <th>Окончание рабочего времени</th> {% endcomment %}
-        </tr>
-        {% comment %} {{table}} {% endcomment %}
+    <div class='cabinets'>
+        <p>Введите дату и время для поиска:</p>
+        <form method='post'>
+            {% csrf_token %}
+            {{ form.as_p }} <br>
+            <button class='btn btn-outline-success' type="submit">Найти свободное рабочее место на данное время</button> 
+        </form>
+    </div>
+    <br>
+    <div class='cabinets'>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Кабинет</th>
+                <th>Рабочее место</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
     {% for el in table %}
-    {{el.cabinet}}
-        <tr>
-            {% comment %} <td>{{el.booking_date}}</td> {% endcomment %}
-            <td>{{el.cabinet}}</td>
-            <td>{{el.number_wp}}</td>
-            {% comment %} <td>{{el.start_time}}</td> {% endcomment %}
-            {% comment %} <td>{{el.end_time}}</td> {% endcomment %}
-        </tr>
+            <tr>
+                <td>{{el.cabinet}}</td>
+                <td>{{el.number_wp}}</td>
+                <td><a class="btn btn-outline-success btn-sm my-btn-2" href={% url 'booking_workplace' el.cabinet.number el.number_wp booking_date%}>Забронировать</a></td>
+            </tr>
     {% endfor %}
+        <tbody>
     </table>
+    </div>
 {% endblock %}

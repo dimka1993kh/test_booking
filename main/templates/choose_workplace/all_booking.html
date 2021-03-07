@@ -3,39 +3,61 @@
 {% block title %}Бронирования{% endblock %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        <p>Сортировать по пользователю</p>
-        {% for el in users %}
-            <a href={% url 'all_booking' el.username %}>{{el}}</a><br>
-        {% endfor %}
-        <p>Сортировать по номеру кабинета</p>
-        {% for el in cabinets %}
-            <a href={% url 'all_booking' el.number %}>{{el}}</a><br>
-        {% endfor %}
-            <a href={% url 'all_booking'%}>Без сортировки</a><br>
-        {% if table %}
-            <table>
-                <tr>
-                    <th>Пользователь</th>
-                    <th>Дата бронирования</th>
-                    <th>Кабинет</th>
-                    <th>Рабочее место</th>
-                    <th>Время начала работы</th>
-                    <th>Время конца работы</th>
-                </tr> 
-            {% for el in table %}
-                <tr>
-                    <td>{{el.user}}</td>
-                    <td>{{el.booking_date}}</td>
-                    <td>{{el.cabinet}}</td>
-                    <td>{{el.workplace}}</td>
-                    <td>{{el.start_time}}</td>
-                    <td>{{el.end_time}}</td>
-                </tr> 
-            {% endfor %}
-            </table>
-        {% else %}
-            <p>Еще нет записей</p>
+    <div class='booking-table'>
+        <div class='sort-table'>
+            <div class='sort-table-small '>
+                {% if user.is_authenticated %}
+                    <p>Сортировать по пользователю</p>
+                    <div>
+                        {% for el in users %}
+                            <a class="btn btn-outline-success btn-sm btn-my" href={% url 'all_booking' el.username %}>{{el}}</a><br>
+                        {% endfor %}
+                    </div>
+            </div>
+            <br>
+            <div class='sort-table-small '>
+                <p>Сортировать по номеру кабинета</p>
+                <div>
+                    {% for el in cabinets %}
+                        <a class="btn btn-outline-success btn-sm btn-my" href={% url 'all_booking' el.number %}>{{el}}</a><br>
+                    {% endfor %}
+                </div>
+            </div>
+            <br>
+            <div class='sort-table-small but'>
+                <a class="btn btn-outline-success btn-sm btn-my" href={% url 'all_booking'%}>Без сортировки</a><br>
+            </div>
+        </div>
+            {% if table %}
+            <br>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Пользователь</th>
+                            <th scope="col">Дата бронирования</th>
+                            <th scope="col">Кабинет</th>
+                            <th scope="col">Рабочее место</th>
+                            <th scope="col">Время начала работы</th>
+                            <th scope="col">Время конца работы</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for el in table %}
+                            <tr>
+                                <td scope="row">{{el.user}}</td>
+                                <td>{{el.booking_date}}</td>
+                                <td>{{el.cabinet}}</td>
+                                <td>{{el.workplace}}</td>
+                                <td>{{el.start_time}}</td>
+                                <td>{{el.end_time}}</td>
+                            </tr> 
+                        {% endfor %}
+                    <tbody>
+                </table>
+            {% else %}
+                <br>
+                <h2>Еще нет записей</h2>
+            {% endif %}
         {% endif %}
-    {% endif %}
+    </div>
 {% endblock %}

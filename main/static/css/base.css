@@ -1,0 +1,192 @@
+body {
+    display: flex;
+    margin: 0;
+}
+
+aside {
+    width: 15%;
+    padding: 2% 10px;
+    height: 100vh;
+    float: left;
+    border-top: rgb(145, 140, 140) 2px solid;
+    border-right: rgb(145, 140, 140) 2px solid;
+    border-bottom: rgb(145, 140, 140) 2px solid;
+    border-radius: 0 10px 10px 0;    
+}
+
+aside a {
+    color: black;
+}
+
+.cabinets {
+    padding: 2% 0;
+    width: 500px;
+    margin: 0 100px;
+    text-align: center;
+}
+
+/* .cabinets select{
+    width: 100px;
+    text-align: center;
+} */
+
+.cabinets h2{
+    text-align: center;
+}
+
+.cabinets a {
+    margin:10px;
+}
+
+.cabinets div {
+    display: inline-block;
+}
+
+
+.reg_form {
+    display: flex;
+    padding: 2% 10px;
+    margin: 0;
+}
+
+.reg_form button{
+    margin-left: 30px;
+}
+
+.mb-3 {
+    margin-left: 30px;
+    width: 350px;
+}
+
+.mb-3 input {
+    float: right;
+}
+
+.sort-table {
+    /* width: 100%; */
+    /* padding: 2% 10px; */
+    /* height: 100vh; */
+    display: flex;
+    height: auto;
+}
+
+.sort-table-small {
+    border: rgb(145, 140, 140) 1px solid;
+    border-radius: 10px; 
+    text-align: center;
+    margin: 0 20px;
+    padding: 10px;
+    display: block;
+}
+
+.sort-table-small div {
+    text-align: center;
+    display: inline-flex;
+}
+
+.sort-table-small div a {
+    margin: 0 10px;
+}
+
+
+.btn-my {
+    margin: 5px 0;
+}
+
+.but {
+    border: rgb(145, 140, 140) 0px solid;
+}
+
+table {
+    margin: 0 20px ;
+}
+
+th {
+    padding: 3px!important;
+}
+td {
+    padding: 3px!important;
+}
+
+.booking-table{
+    text-align: center;
+}
+
+.my-btn-2 {
+    margin: 0!important;
+}
+
+
+
+
+
+/* aside ul {
+    list-style: none
+}
+
+aside ul a {
+    color: #EDF5E1;
+    display: block;
+    margin-top: 20px;
+}
+
+aside ul a:hover {
+    color: black;
+    text-decoration: none;
+    transform: scale(1.2);
+    transition: transform .6s ease;
+}
+
+main {
+    text-align: center;
+    width: 100%;
+    margin-top: 2.5%;
+}
+
+.btn-success, .btn-success a {
+    color: black;
+}
+
+.account {
+    display: flex;
+}
+
+.account a {
+    float: right;
+    padding-left: 25px;
+}
+
+nav {
+    margin-left: 25px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #EDF5E1;
+    font-size: 16px;
+}
+
+.my_class {
+    max-width: 30%;
+    margin: 10px auto;
+    display: block!important;
+    background: #254E58!important;
+    color: #EDF5E1!important;
+
+}
+
+.user_blog {
+    display: flex;
+    width: 250px;
+}
+
+.user_blog a {
+    width: 120px;
+    text-align: center;
+    height: 40px;
+    margin: auto;
+}
+
+.unsubscribe {
+    background: black!important;
+} */

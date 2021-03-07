@@ -3,15 +3,17 @@
 {% block title %}Выбор времени бронирования{% endblock %}
 
 {% block content %}
-    <h1>Выбор времени бронирования</h1>
-    <p>Кабинет {{cabinet}}, рабочее место {{workplace}}</p>
-    {% if not error %}
-        <form method='post'>
-            {% csrf_token %}
-            {{ form.as_p }} <br>
-            <button class='btn btn-success' type="submit">Забронировать рабочее место на данное время</button> 
-        </form>
-    {% else %}
-        <span>{{error}}</span>
-    {% endif %}
+    <div class='cabinets'>
+        <h2>Выбор времени бронирования</h2>
+        <p>Кабинет {{cabinet}}, рабочее место {{workplace}}</p>
+        {% if not error %}
+            <form method='post'>
+                {% csrf_token %}
+                {{ form.as_p }} <br>
+                <button class='btn btn-outline-secondary' type="submit">Забронировать рабочее место на данное время</button> 
+            </form>
+        {% else %}
+            <span>{{error}}</span>
+        {% endif %}
+    </div>
 {% endblock %}

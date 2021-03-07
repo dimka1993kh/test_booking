@@ -3,10 +3,28 @@
 {% block title %}Вход на сайт{% endblock %}
 
 {% block content %}
-    <h2>Войти</h2>
-    <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Log In</button>
-    </form>
+    <div class='reg_form nav flex-column'>
+        <h2>Авторизация</h2><br>      
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Имя пользователя</label>
+                {{form.username}}
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Введите пароль</label>
+                {{form.password}}
+            </div>
+            <br>
+            <button type="submit" class="btn btn-outline-secondary">Войти</button>
+        </form>
+    </div>
 {% endblock %}
+
+
+
+
+
+
+
+

@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect
-from .models import Cabinet, Workplace, BookingDate, BookingWorkplace
+from .models import Cabinet, Workplace, BookingWorkplace
 from .forms import BookingDateForm, BookingTimeForm, FreeWorkplaceForm
 from .functions import find_free_time, analize_time_interval, find_free_workplaces
 from django.contrib.auth.models import User
+from .data import default_choices
 
 # Create your views here.
 def choose_workplace(request, pk):
     data = {
         'workplaces' : Workplace.objects.filter(cabinet=pk),
+        'cabinet' : pk
     }
     return render(request, 'choose_workplace/choose_workplace.html', data)
 
@@ -23,15 +25,11 @@ def booking_date_workplace(request, pk, wkplc):
         form = BookingDateForm(request.POST)
         if form.is_valid():
             form.save()
-            # print(form.data)
-            data = {
-                'date' : f"{form.data['booking_date_year']}-{form.data['booking_date_month']}-{form.data['booking_date_day']}"
-            }
-            return redirect('booking_workplace', pk, wkplc, data['date'])
+            date = f"{form.data['booking_date_year']}-{form.data['booking_date_month']}-{form.data['booking_date_day']}"
+            return redirect('booking_workplace', pk, wkplc, date)
         else:
             error = 'Форма была не верной'
     form = BookingDateForm()
-
     data = {
         'form' : form,
         'cabinet' : pk,
@@ -39,59 +37,55 @@ def booking_date_workplace(request, pk, wkplc):
     }
     return render(request, 'choose_workplace/booking_date_workplace.html', data)
 
-def booking_workplace(request, pk, wkplc, date): 
+def booking_workplace(request, pk, wkplc, date, start_time=None, end_time=None): 
     error = ''
-    # not_free_workplace_on_this_day = BookingWorkplace.objects.filter(booking_date=date).filter(cabinet=pk).filter(workplace=wkplc).last()
-    # if not_free_workplace_on_this_day:
-    #     arg = [not_free_workplace_on_this_day.start_time, not_free_workplace_on_this_day.end_time]
-    # else: 
-    #     arg = None
-    # free_time = find_free_time(arg)
-    # start_choices = free_time['start']
-    # end_choices = free_time['end']
     not_free_workplace_on_this_day = BookingWorkplace.objects.filter(booking_date=date).filter(cabinet=pk).filter(workplace=wkplc)
-    default_choices = None
+    now_choices = None
     if not_free_workplace_on_this_day:
-        for iter_obj in not_free_workplace_on_this_day:
-            arg = [iter_obj.start_time, iter_obj.end_time]
-            free_time = find_free_time(arg, default_choices)
-            default_choices = free_time['default']
+        for workplace in not_free_workplace_on_this_day:
+            arg = [workplace.start_time, workplace.end_time]
+            free_time = find_free_time(arg, now_choices)
+            now_choices = free_time['default']
     else: 
         arg = None
-        free_time = find_free_time(arg, default_choices)
-        default_choices = free_time['default']
-    
+        free_time = find_free_time(arg, now_choices)
+        now_choices = free_time['default']
 
     start_choices = free_time['start']
     end_choices = free_time['end']
-    if len(start_choices) == 0 and len(end_choices) == 0:
+    if now_choices == []:
         error = 'Данное место в кабинете занято на весь день. Выберете другое место'
-    if request.method == 'POST':
-        form = BookingTimeForm(request.POST, start_choices=start_choices, end_choices=end_choices, cabinet=pk, workplace=wkplc, booking_date=date, user=request.user)
-        if form.is_valid():
-            response = form.save(commit=False)
-            response.cabinet = pk
-            response.workplace = wkplc
-            response.booking_date = date
-            response.user = request.user.username
-            # print(BookingWorkplace.objects.filter(booking_date=date))
-            error = analize_time_interval(default_choices, response.start_time, response.end_time, BookingWorkplace.objects.filter(booking_date=date))
-            if error == '':
-                response.save()
-                return redirect('successful_booking', pk, wkplc, response.user, date, response.start_time, response.end_time)
-        else:
-            error = 'Форма была не верной'
-        # print('request.user.username', request.user.username)
-    form = BookingTimeForm(start_choices=start_choices, end_choices=end_choices, cabinet=pk, workplace=wkplc, booking_date=date, user=request.user) 
-
-    data = {
-        'date' : date, 
-        'form' : form,
-        'cabinet' : pk,
-        'workplace' : wkplc,
-        'user': request.user,
-        'error' : error,
-        }
+        data = {
+            'date' : date, 
+            'cabinet' : pk,
+            'workplace' : wkplc,
+            'user': request.user,
+            'error' : error,
+            }
+    else:
+        if request.method == 'POST':
+            form = BookingTimeForm(request.POST, start_choices=start_choices, end_choices=end_choices, cabinet=pk, workplace=wkplc, booking_date=date, user=request.user)
+            if form.is_valid():
+                response = form.save(commit=False)
+                response.cabinet = pk
+                response.workplace = wkplc
+                response.booking_date = date
+                response.user = request.user.username
+                error = analize_time_interval(default_choices, now_choices, response.start_time, response.end_time, BookingWorkplace.objects.filter(booking_date=date).filter(cabinet=pk))
+                if error == '':
+                    response.save()
+                    return redirect('successful_booking', pk, wkplc, response.user, date, response.start_time, response.end_time)
+            else:
+                error = 'Форма была не верной'
+        form = BookingTimeForm(request.POST, start_choices=start_choices, end_choices=end_choices, cabinet=pk, workplace=wkplc, booking_date=date, user=request.user) 
+        data = {
+            'date' : date, 
+            'form' : form,
+            'cabinet' : pk,
+            'workplace' : wkplc,
+            'user': request.user,
+            'error' : error,
+            }
     return render(request, 'choose_workplace/booking_workplace.html', data)
 
 def all_booking(request, username=None, cabinet=None):
@@ -110,7 +104,6 @@ def all_booking(request, username=None, cabinet=None):
 
 def find_free_workplace(request, booking_date=None, start_time=None, end_time=None):
     args = [booking_date != None, start_time != None, end_time != None]
-    # print(request.method)
     if request.method=='POST':
         booking_date = ''
         start_time = ''
@@ -118,23 +111,14 @@ def find_free_workplace(request, booking_date=None, start_time=None, end_time=No
         form = FreeWorkplaceForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            print('data', data)
             booking_date = data.get('booking_date')
             start_time = data.get('start_time')
             end_time = data.get('end_time')
             return redirect('find_free_workplace', booking_date, start_time, end_time)
-    print(booking_date)
     form = FreeWorkplaceForm() 
-    # print(args) 
     if all(args):
-        table = []
-        print('(BookingWorkplace.objects.filter(booking_date=booking_date)', BookingWorkplace.objects.filter(booking_date=booking_date))
-        # free_workplaces = find_free_workplaces(BookingWorkplace.objects.filter(booking_date=booking_date), start_time, end_time)
-        # print('free_workplaces', free_workplaces)
-        # table = Workplace.objects.exclude(cabinet__in=free_workplaces[0], number_wp__in=free_workplaces[1])
+        # error = analize_time_interval(default_choices, now_choices, response.start_time, response.end_time, BookingWorkplace.objects.filter(booking_date=date))
         table = find_free_workplaces(Workplace.objects.all(), BookingWorkplace.objects.filter(booking_date=booking_date), start_time, end_time)
-#.exclude(number_wp__in=free_workplaces[1])s
-        print('table', table)
     else:
         table = Workplace.objects.all()
     data = {

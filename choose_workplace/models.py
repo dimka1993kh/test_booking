@@ -42,23 +42,10 @@ class BookingWorkplace(models.Model):
     booking_date = models.DateField('Дата бронирования', default=datetime.date.today())
     start_time = models.IntegerField('Начало работы', choices=default_choices)
     end_time = models.IntegerField('Окончание работы', choices=default_choices)
-
-# field1 = forms.DateField(
-#     widget=SelectDateWidget(
-#         empty_label=("Choose Year", "Choose Month", "Choose Day"),
-#     ),
-# )
-
-
-
+    
     def __str__(self):
-        return f'Дата: {self.booking_date}, пользователь {self.user}, кабинет:{self.cabinet}, начало работы {self.start_time}, окончание работы {self.end_time}'
+        return f'Дата: {self.booking_date}, пользователь {self.user}, кабинет:{self.cabinet}, рабочее место: {self.workplace}, начало работы {self.start_time}, окончание работы {self.end_time}'
 
     class Meta:
             verbose_name = 'Время бронирования'
             verbose_name_plural = 'Время бронирования'
-
-    
-
-# from .models import BookingWorkplace
-

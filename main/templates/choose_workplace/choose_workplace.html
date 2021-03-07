@@ -3,9 +3,12 @@
 {% block title %}Выбор рабочего места{% endblock %}
 
 {% block content %}
-    {% for workplace in workplaces %}
-        <div>
-            <a href={% url 'booking_date_workplace' workplace.cabinet.number workplace.number_wp %}>{{workplace.number_wp}}</a>
-        </div>
-    {% endfor %}
+    <div class='cabinets'>
+    <h2>Кабинет №{{cabinet}}</h2>
+        {% for workplace in workplaces %}
+            <div>
+                <a class="btn btn-outline-success" href={% url 'booking_date_workplace' workplace.cabinet.number workplace.number_wp %}>Рабочее место №{{workplace.number_wp}}</a>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

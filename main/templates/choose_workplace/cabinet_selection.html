@@ -3,9 +3,11 @@
 {% block title %}Выбор рабочего места{% endblock %}
 
 {% block content %}
-    {% for cabinet in cabinets %}
-        <div>
-            <a href={% url 'choose_workplace' cabinet.number %}>{{cabinet}}</a>
-        </div>
-    {% endfor %}
+    <div class='cabinets'>
+        {% for cabinet in cabinets %}
+            <div>
+                <a class="btn btn-outline-success" href={% url 'choose_workplace' cabinet.number %}>{{cabinet}}</a>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

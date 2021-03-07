@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'main',
     'accounts.apps.AccountsConfig',
     'choose_workplace',
+    'bootstrap_datepicker_plus',
+    'bootstrap4'
 ]
 
 MIDDLEWARE = [
@@ -125,3 +127,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 LOGIN_REDIRECT_URL = 'main'
 LOGOUT_REDIRECT_URL = 'main'
+
+BOOTSTRAP4  =  { 
+    'include_jquery' :  True , 
+}
